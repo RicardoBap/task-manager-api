@@ -3,20 +3,24 @@ require 'rails_helper'
 RSpec.describe 'Users API', type: :request do
   let!(:user) { FactoryGirl.create(:user) }
   let(:user_id) { user.id }
+  let(:headers) do
+    {
+      'Accept' => 'application/vnd.taskmanager.v1',
+      'Content-Type' => Mime[:json].to_s
+    }
+  end
 
   before { host! 'api.taskmanager.test' }
 
 
   describe 'GET /users/:id' do
     before do
-      headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
       get "/users/#{user_id}", params: {}, headers: headers
     end
 
     context 'when the user exists' do
-      it 'returns the user' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
-        expect(user_response[:id]).to eq(user_id)
+      it 'returns the user' do        
+        expect(json_body[:id]).to eq(user_id)
       end
 
       it 'returns status code 200' do
@@ -31,13 +35,11 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(404)
       end
     end
-
   end # FIM describe GET
 
   describe 'POST /users' do
     before do
-      headers = { 'Accept': 'application/vnd.taskmanager.v1' }
-      post '/users', params: { user: user_params }, headers: headers  
+      post '/users', params: { user: user_params }.to_json, headers: headers  
     end
 
     context 'when the request params are valid' do
@@ -47,9 +49,8 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(201)
       end
 
-      it 'returns json data for created user' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
-        expect(user_response[:email]).to eq(user_params[:email])
+      it 'returns json data for created user' do       
+        expect(json_body[:email]).to eq(user_params[:email])
       end
     end
 
@@ -60,17 +61,15 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(422)        
       end
 
-      it 'returns the json data for the errors' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
-        expect(user_response).to have_key(:errors)
+      it 'returns the json data for the errors' do        
+        expect(json_body).to have_key(:errors)
       end
     end
   end # FIM describe POST
 
   describe 'PUT /users/:id' do
     before do
-      headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
-      put "/users/#{user_id}", params: { user: user_params }, headers: headers
+      put "/users/#{user_id}", params: { user: user_params }.to_json, headers: headers
     end
 
     context 'when the request params are valid' do
@@ -81,8 +80,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns the json data for the update user' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
-        expect(user_response[:email]).to eq(user_params[:email])
+        expect(json_body[:email]).to eq(user_params[:email])
       end
     end
 
@@ -93,17 +91,14 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(422)
       end
 
-      it 'returns the json data for the errors' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
-        expect(user_response).to have_key(:errors)
-      end
-      
+      it 'returns the json data for the errors' do        
+        expect(json_body).to have_key(:errors)
+      end      
     end
   end # FIM describe PUT
 
   describe 'DELETE /users/:id' do
     before do
-      headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
       delete "/users/#{user_id}", params: {}, headers: headers
     end
 
@@ -113,10 +108,8 @@ RSpec.describe 'Users API', type: :request do
 
     it 'removes the user from database' do
       expect( User.find_by(id: user.id ) ).to be_nil
-    end
-    
+    end    
   end # FIM describe DELETE
-
   
 end # FIM
 
@@ -130,4 +123,6 @@ end # FIM
 # User.create(email: 'maria@joaquina.com', password: '123456', password_confirmation: '123456')
 # User.count
 # User.all
+
+#  bundle exec spring rspec spec/requests/api/v1/users_spec.rb --format=d
 
