@@ -39,11 +39,11 @@ end # FIM
 # curl http://api.task-manager.test:3000/users/1
 # curl -v http://api.task-manager.test:3000/users/1
 # curl -v http://api.task-manager.test:3000/users/2
-# curl -v -H "Accept: application/vnd.taskmanager.v1" http://api.task-manager.test:3000/users/1
+# curl -v -H 'Accept: application/vnd.taskmanager.v1' http://api.task-manager.test:3000/users/1
 
 # rails c
-# User.create(email: "joao@silva.com", password: "123456", password_confirmation: "123456")
-# User.create(email: "maria@joaquina.com", password: "123456", password_confirmation: "123456")
+# User.create(email: 'joao@silva.com', password: '123456', password_confirmation: '123456')
+# User.create(email: 'maria@joaquina.com', password: '123456', password_confirmation: '123456')
 # User.count
 # User.all
 
