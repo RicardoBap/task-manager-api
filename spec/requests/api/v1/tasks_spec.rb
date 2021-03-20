@@ -127,4 +127,24 @@ RSpec.describe 'Task API' do
     end    
   end # FIM PUT /tasks/:id
 
+
+  describe 'DELETE /tasks/:id' do
+    let!(:task) { FactoryGirl.create(:task, user_id: user.id) }
+
+    before do
+      delete "/tasks/#{task.id}", params: {}, headers: headers
+    end   
+      
+    it 'returns status code 204' do
+      expect(response).to have_http_status(204)
+    end
+
+    it 'removes the task from database' do
+      expect { Task.find(task.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      # expect( Task.find_by(id: task.id) ).to be_nil
+    end
+    
+    
+  end # FIM DELETE /tasks/:id
+
 end # FIM
