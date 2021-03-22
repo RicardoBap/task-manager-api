@@ -4,11 +4,14 @@ RSpec.describe 'Task API' do
   before { host! 'api.task-manager.v1' }
 
   let!(:user) { FactoryGirl.create(:user) }
+  let!(:auth_data) { user.create_new_auth_token }
   let(:headers) do
     {
       'Accept' => 'application/vnd.taskmanager.v2',
       'Content-Type' => Mime[:json].to_s,
-      'Authorization' => user.auth_token
+      'Access-token' => auth_data['access-token'],
+      'uid' => auth_data['uid'],
+      'client' => auth_data['client']
     }
   end
 
