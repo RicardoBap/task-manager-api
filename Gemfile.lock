@@ -110,6 +110,7 @@ GEM
     puma (3.12.6)
     racc (1.5.2)
     rack (2.2.3)
+    rack-cors (1.0.1)
     rack-protection (2.1.0)
       rack
     rack-test (0.6.3)
@@ -207,6 +208,7 @@ DEPENDENCIES
   mysql2 (>= 0.3.18, < 0.5)
   omniauth
   puma (~> 3.0)
+  rack-cors
   rails (~> 5.0.2)
   ransack
   rspec-rails (~> 3.5)
